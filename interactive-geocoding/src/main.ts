@@ -5,8 +5,11 @@ import Search from "@arcgis/core/widgets/Search.js";
 import { locationToAddress } from "@arcgis/core/rest/locator.js";
 import Graphic from "@arcgis/core/Graphic.js";
 import SimpleMarkerSymbol from "@arcgis/core/symbols/SimpleMarkerSymbol.js";
+
+// setup API key
 esriConfig.apiKey = import.meta.env.VITE_ARCGIS_API_KEY;
 
+// setup map and map view
 const map = new Map({
   basemap: {
     style: {
@@ -19,13 +22,19 @@ const view = new MapView({
   container: "viewDiv",
   map: map,
   zoom: 15,
-  center: [-116.545296, 33.830296], // longitude, latitude
+  center: [-116.545296, 33.830296],
 });
 
+// setup the search widget
 const searchWidget = new Search({
   view: view,
 });
 
+view.ui.add(searchWidget, {
+  position: "top-right",
+});
+
+// find the address of the point when the map is clicked
 view.on("click", async (event) => {
   try {
     const response = await locationToAddress(
@@ -42,13 +51,9 @@ view.on("click", async (event) => {
   }
 });
 
-view.ui.add(searchWidget, {
-  position: "top-right",
-});
-
+// helper methods for showing the popup and adding a graphic
 view.popup.actions = [] as any;
 
-// Information shown when map is clicked
 function showPopup(
   response: __esri.AddressCandidate | string,
   location?: __esri.Point
