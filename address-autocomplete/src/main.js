@@ -26,8 +26,12 @@ const countryInput = document.getElementById("country-input");
 form.addEventListener("submit", function (event) {
   const formData = new FormData(form);
   const results = {};
+  const comboBoxInput =
+    streetAddressInput.shadowRoot.querySelectorAll("input")[0];
 
   formData.forEach((value, key) => (results[key] = value));
+
+  results["street-address"] = streetAddressInput.value || comboBoxInput.value;
 
   console.log("Form submitted");
   console.log("Form data", results);
@@ -58,6 +62,10 @@ streetAddressInput.addEventListener(
       authentication,
       maxSuggestions: 10,
       category: "Address",
+      returnCollections: false, // we don't want types of location in the suggestions
+      sourceCountry: "USA", // the source of who is providing the suggestions
+      // countryCode: "USA", // only return US addresses
+      //searchExtent
     }).then((response) => {
       const htmlStr = response.suggestions
         .map(({ magicKey, text }) => {

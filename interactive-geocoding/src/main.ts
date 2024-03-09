@@ -41,7 +41,7 @@ view.on("click", async (event) => {
       "https://geocode.arcgis.com/arcgis/rest/services/World/GeocodeServer",
       {
         location: event.mapPoint,
-        locationType: "rooftop",
+        locationType: "street",
       }
     );
     searchWidget.searchTerm = response.attributes.LongLabel;
