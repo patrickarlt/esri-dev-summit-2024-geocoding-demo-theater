@@ -21,6 +21,7 @@ const cityInput = document.getElementById("city-input");
 const regionInput = document.getElementById("region-input");
 const postalInput = document.getElementById("postal-input");
 const countryInput = document.getElementById("country-input");
+let recentlySelectedSuggestion = false;
 
 // listen for the form to be submitted, converting to JSON and logging the results
 form.addEventListener("submit", function (event) {
@@ -45,11 +46,9 @@ streetAddressInput.addEventListener(
   function (event) {
     const comboBoxInput = event.target.shadowRoot.querySelectorAll("input")[0];
     const comboBoxText = comboBoxInput.value;
-
+    console.log({ comboBoxInput, comboBoxText });
     // when the user accepts a suggestion the text will be empty so we set it to the saved value in the hidden input
     if (comboBoxText.length <= 0) {
-      console.log("No text in combobox");
-
       if (hiddenStreetAddress.value !== comboBoxText) {
         comboBoxInput.value = hiddenStreetAddress.value;
       }
@@ -73,17 +72,16 @@ streetAddressInput.addEventListener(
         })
         .join();
 
-      const suggestionHTML = document
-        .createRange()
-        .createContextualFragment(htmlStr);
-
-      streetAddressInput.replaceChildren(suggestionHTML);
+      streetAddressInput.innerHTML = htmlStr;
+      streetAddressInput.open();
     });
   }
 );
 
 // listen for changes to the street address input, and geocode the selected suggestion
 streetAddressInput.addEventListener("calciteComboboxChange", function (event) {
+  recentlySelectedSuggestion = true;
+
   const [magicKey, suggestionText] = event.target.value.split(":::");
 
   console.log("Combobox selection", { magicKey, suggestionText });
@@ -116,8 +114,18 @@ streetAddressInput.addEventListener("calciteComboboxChange", function (event) {
     countryInput.value = country;
 
     // clear the suggestions from the combobox
-    streetAddressInput.replaceChildren([]);
+    streetAddressInput.innerHTML = "";
+
+    setTimeout(() => {
+      hiddenStreetAddress.value = null;
+    }, 500);
+
+    streetAddressInput.close();
 
     console.log("Geocode response", response.candidates[0]);
   });
+});
+
+streetAddressInput.addEventListener("blur", function () {
+  hiddenStreetAddress.value = null;
 });
