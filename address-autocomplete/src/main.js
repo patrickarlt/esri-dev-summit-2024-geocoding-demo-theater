@@ -36,6 +36,7 @@ form.addEventListener("submit", function (event) {
 
   console.log("Form submitted");
   console.log("Form data", results);
+  alert(JSON.stringify(results, null, 2));
 
   event.preventDefault();
 });
@@ -47,6 +48,7 @@ streetAddressInput.addEventListener(
     const comboBoxInput = event.target.shadowRoot.querySelectorAll("input")[0];
     const comboBoxText = comboBoxInput.value;
     console.log({ comboBoxInput, comboBoxText });
+
     // when the user accepts a suggestion the text will be empty so we set it to the saved value in the hidden input
     if (comboBoxText.length <= 0) {
       if (hiddenStreetAddress.value !== comboBoxText) {
@@ -59,12 +61,12 @@ streetAddressInput.addEventListener(
     // get suggestions from the geocoding service and populate the combobox items
     suggest(comboBoxText, {
       authentication,
-      maxSuggestions: 10,
+      maxSuggestions: 5,
       category: "Address",
       returnCollections: false, // we don't want types of location in the suggestions
       sourceCountry: "USA", // the source of who is providing the suggestions
       // countryCode: "USA", // only return US addresses
-      //searchExtent
+      // searchExtent
     }).then((response) => {
       const htmlStr = response.suggestions
         .map(({ magicKey, text }) => {

@@ -13,7 +13,7 @@ esriConfig.apiKey = import.meta.env.VITE_ARCGIS_API_KEY;
 const map = new Map({
   basemap: {
     style: {
-      id: "arcgis/navigation-night",
+      id: "arcgis/imagery",
     },
   },
 });
@@ -41,7 +41,7 @@ view.on("click", async (event) => {
       "https://geocode.arcgis.com/arcgis/rest/services/World/GeocodeServer",
       {
         location: event.mapPoint,
-        locationType: "rooftop", // "street"
+        locationType: "street", // "street" or "rooftop"
       }
     );
     searchWidget.searchTerm = response.attributes.LongLabel;

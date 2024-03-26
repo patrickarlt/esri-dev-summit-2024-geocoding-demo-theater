@@ -19,6 +19,7 @@ if (!username || !password) {
 const authentication = await ArcGISIdentityManager.signIn({
   username,
   password,
+  // portal: "https://www.arcgis.com/sharing/rest",
 });
 
 console.log("\nSigned in as", authentication.username);
@@ -80,7 +81,6 @@ const publishResponse = await request(
   {
     authentication,
     params: {
-      f: "json",
       itemId: item.id,
       filetype: "csv",
       publishParameters: analyzeResult.publishParameters,
